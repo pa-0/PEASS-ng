@@ -1419,6 +1419,26 @@ search:
                 search_in: 
                   - common
           
+          - name: "Google Cloud Directory Sync"
+            value: 
+                files:
+                  - name: "*.xml"
+                    value:
+                        bad_regex: "oAuth2RefreshToken.*|authCredentialsEncrypted.*"
+                type: d
+                search_in: 
+                  - common
+
+          - name: "Google Password Sync"
+            value: 
+                files:
+                  - name: "*.xml"
+                    value:
+                        bad_regex: "baseDN.*|authorizeUsername.*"
+                type: d
+                search_in: 
+                  - common
+          
   
   - name: Road Recon
     value:
@@ -1438,7 +1458,7 @@ search:
         config:
           auto_check: True
           exec:
-            - ipa_exists="$(command -v ipa)"; if [ "$ipa_exists" ]; then print_info "https://book.hacktricks.xyz/linux-hardening/freeipa-pentesting"; fi
+            - ipa_exists="$(command -v ipa)"; if [ "$ipa_exists" ]; then print_info "https://book.hacktricks.wiki/en/linux-hardening/freeipa-pentesting.html"; fi
         
         files:
           - name: "ipa"

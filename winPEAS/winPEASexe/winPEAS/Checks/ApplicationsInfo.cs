@@ -56,7 +56,7 @@ namespace winPEAS.Checks
             try
             {
                 Beaprint.MainPrint("Installed Applications --Via Program Files/Uninstall registry--");
-                Beaprint.LinkPrint("https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation#software", "Check if you can modify installed software");
+                Beaprint.LinkPrint("https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html#applications", "Check if you can modify installed software");
                 SortedDictionary<string, Dictionary<string, string>> installedAppsPerms = InstalledApps.GetInstalledAppsPerms();
                 string format = "    ==>  {0} ({1})";
 
@@ -102,7 +102,7 @@ namespace winPEAS.Checks
             try
             {
                 Beaprint.MainPrint("Autorun Applications");
-                Beaprint.LinkPrint("https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation/privilege-escalation-with-autorun-binaries", "Check if you can modify other users AutoRuns binaries (Note that is normal that you can modify HKCU registry and binaries indicated there)");
+                Beaprint.LinkPrint("https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/privilege-escalation-with-autorun-binaries.html", "Check if you can modify other users AutoRuns binaries (Note that is normal that you can modify HKCU registry and binaries indicated there)");
                 List<Dictionary<string, string>> apps = AutoRuns.GetAutoRuns(Checks.CurrentUserSiDs);
 
                 foreach (Dictionary<string, string> app in apps)
@@ -117,6 +117,7 @@ namespace winPEAS.Checks
                             { (app["Folder"].Length > 0) ? app["Folder"].Replace("\\", "\\\\").Replace("(", "\\(").Replace(")", "\\)").Replace("]", "\\]").Replace("[", "\\[").Replace("?", "\\?").Replace("+","\\+") : "ouigyevb2uivydi2u3id2ddf3", !string.IsNullOrEmpty(app["interestingFolderRights"]) ? Beaprint.ansi_color_bad : Beaprint.ansi_color_good },
                             { (app["File"].Length > 0) ? app["File"].Replace("\\", "\\\\").Replace("(", "\\(").Replace(")", "\\)").Replace("]", "\\]").Replace("[", "\\[").Replace("?", "\\?").Replace("+","\\+") : "adu8v298hfubibuidiy2422r", !string.IsNullOrEmpty(app["interestingFileRights"]) ? Beaprint.ansi_color_bad : Beaprint.ansi_color_good },
                             { (app["Reg"].Length > 0) ? app["Reg"].Replace("\\", "\\\\").Replace("(", "\\(").Replace(")", "\\)").Replace("]", "\\]").Replace("[", "\\[").Replace("?", "\\?").Replace("+","\\+") : "o8a7eduia37ibduaunbf7a4g7ukdhk4ua", (app["RegPermissions"].Length > 0) ? Beaprint.ansi_color_bad : Beaprint.ansi_color_good },
+                            { "Potentially sensitive file content:", Beaprint.ansi_color_bad },
                         };
                     string line = "";
 
@@ -158,14 +159,19 @@ namespace winPEAS.Checks
                         line += "\n    File: " + filepath_mod;
                     }
 
-                    if (app["isUnquotedSpaced"].ToLower() == "true")
+                    if (app["isUnquotedSpaced"].ToLower() != "false")
                     {
-                        line += " (Unquoted and Space detected)";
+                        line += $" (Unquoted and Space detected) - {app["isUnquotedSpaced"]}";
                     }
 
                     if (!string.IsNullOrEmpty(app["interestingFileRights"]))
                     {
                         line += "\n    FilePerms: " + app["interestingFileRights"];
+                    }
+
+                    if (app.ContainsKey("sensitiveInfoList") && !string.IsNullOrEmpty(app["sensitiveInfoList"]))
+                    {
+                        line += "\n    Potentially sensitive file content: " + app["sensitiveInfoList"];
                     }
 
                     Beaprint.AnsiPrint(line, colorsA);
@@ -183,7 +189,7 @@ namespace winPEAS.Checks
             try
             {
                 Beaprint.MainPrint("Scheduled Applications --Non Microsoft--");
-                Beaprint.LinkPrint("https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation/privilege-escalation-with-autorun-binaries", "Check if you can modify other users scheduled binaries");
+                Beaprint.LinkPrint("https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/privilege-escalation-with-autorun-binaries.html", "Check if you can modify other users scheduled binaries");
                 List<Dictionary<string, string>> scheduled_apps = ApplicationInfoHelper.GetScheduledAppsNoMicrosoft();
 
                 foreach (Dictionary<string, string> sapp in scheduled_apps)
@@ -233,7 +239,7 @@ namespace winPEAS.Checks
             {
                 Beaprint.MainPrint("Device Drivers --Non Microsoft--");
                 // this link is not very specific, but its the best on hacktricks
-                Beaprint.LinkPrint("https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation#vulnerable-drivers", "Check 3rd party drivers for known vulnerabilities/rootkits.");
+                Beaprint.LinkPrint("https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html#drivers", "Check 3rd party drivers for known vulnerabilities/rootkits.");
 
                 foreach (var driver in DeviceDrivers.GetDeviceDriversNoMicrosoft())
                 {

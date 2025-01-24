@@ -151,7 +151,7 @@ namespace winPEAS.Checks
             try
             {
                 Beaprint.MainPrint("Cloud Credentials");
-                Beaprint.LinkPrint("https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation#credentials-inside-files");
+                Beaprint.LinkPrint("https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html#files-and-registry-credentials");
                 List<Dictionary<string, string>> could_creds = KnownFileCredsInfo.ListCloudCreds();
                 if (could_creds.Count != 0)
                 {
@@ -290,15 +290,13 @@ namespace winPEAS.Checks
                         const string distribution = "Distribution";
                         const string rootDirectory = "Root directory";
                         const string runWith = "Run command";
+                        const string wslUser = "WSL user";
+                        const string root = "root";
+
 
                         var colors = new Dictionary<string, string>();
-                        new List<string>
-                        {
-                            linpeas,
-                            distribution,
-                            rootDirectory,
-                            runWith
-                        }.ForEach(str => colors.Add(str, Beaprint.ansi_color_bad));
+                        new List<string> { linpeas, distribution, rootDirectory, runWith, wslUser, root }
+                         .ForEach(str => colors.Add(str, Beaprint.ansi_color_bad));
 
                         Beaprint.BadPrint("    Found installed WSL distribution(s) - listed below");
                         Beaprint.AnsiPrint($"    Run {linpeas} in your WSL distribution(s) home folder(s).\n", colors);
@@ -310,14 +308,16 @@ namespace winPEAS.Checks
                                 string distributionSubKey = $"{basePath}\\{wslKey}";
                                 string distributionRootDirectory = $"{RegistryHelper.GetRegValue(hive, distributionSubKey, "BasePath")}\\rootfs";
                                 string distributionName = RegistryHelper.GetRegValue(hive, distributionSubKey, "DistributionName");
+                                string user = WSLHelper.TryGetRootUser(distributionName, wslKey);
 
                                 Beaprint.AnsiPrint($"    {distribution}:      \"{distributionName}\"\n" +
+                                                   $"    {wslUser}:          \"{user}\"\n" +
                                                    $"    {rootDirectory}:    \"{distributionRootDirectory}\"\n" +
                                                    $"    {runWith}:       wsl.exe --distribution \"{distributionName}\"",
                                                     colors);
                                 Beaprint.PrintLineSeparator();
                             }
-                            catch (Exception) { }
+                            catch (Exception ex) { }
                         }
 
                         // try to run linpeas.sh in the default distribution
@@ -328,7 +328,7 @@ namespace winPEAS.Checks
                         {
                             try
                             {
-                                WSL.RunLinpeas(Checks.LinpeasUrl);
+                                WSLHelper.RunLinpeas(Checks.LinpeasUrl);
                             }
                             catch (Exception ex)
                             {
@@ -382,7 +382,7 @@ namespace winPEAS.Checks
                 string[] passRegHklm = new string[] { @"SYSTEM\CurrentControlSet\Services\SNMP" };
 
                 Beaprint.MainPrint("Looking for possible regs with creds");
-                Beaprint.LinkPrint("https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation#inside-the-registry");
+                Beaprint.LinkPrint("https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html#inside-the-registry");
 
                 string winVnc4 = RegistryHelper.GetRegValue("HKLM", @"SOFTWARE\RealVNC\WinVNC4", "password");
                 if (!string.IsNullOrEmpty(winVnc4.Trim()))
@@ -431,7 +431,7 @@ namespace winPEAS.Checks
                 };
 
                 Beaprint.MainPrint("Looking for possible password files in users homes");
-                Beaprint.LinkPrint("https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation#credentials-inside-files");
+                Beaprint.LinkPrint("https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html#files-and-registry-credentials");
                 var fileInfos = SearchHelper.SearchUserCredsFiles();
 
                 foreach (var fileInfo in fileInfos)
@@ -470,7 +470,7 @@ namespace winPEAS.Checks
                 };
 
                 Beaprint.MainPrint("Looking inside the Recycle Bin for creds files");
-                Beaprint.LinkPrint("https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation#credentials-inside-files");
+                Beaprint.LinkPrint("https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html#files-and-registry-credentials");
                 List<Dictionary<string, string>> recy_files = InterestingFiles.InterestingFiles.GetRecycleBin();
 
                 foreach (Dictionary<string, string> rec_file in recy_files)
@@ -506,7 +506,7 @@ namespace winPEAS.Checks
                 };
 
                 Beaprint.MainPrint("Searching known files that can contain creds in home");
-                Beaprint.LinkPrint("https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation#credentials-inside-files");
+                Beaprint.LinkPrint("https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html#files-and-registry-credentials");
 
                 var files = SearchHelper.SearchUsersInterestingFiles();
 

@@ -12,10 +12,10 @@ Here you will find **privilege escalation tools for Windows and Linux/Unix\* and
 
 These tools search for possible **local privilege escalation paths** that you could exploit and print them to you **with nice colors** so you can recognize the misconfigurations easily.
 
-- Check the **Local Windows Privilege Escalation checklist** from **[book.hacktricks.xyz](https://book.hacktricks.xyz/windows-hardening/checklist-windows-privilege-escalation)**
+- Check the **Local Windows Privilege Escalation checklist** from **[book.hacktricks.wiki](https://book.hacktricks.wiki/en/windows-hardening/checklist-windows-privilege-escalation.html)**
 - **[WinPEAS](https://github.com/peass-ng/PEASS-ng/tree/master/winPEAS) - Windows local Privilege Escalation Awesome Script (C#.exe and .bat)**
 
-- Check the **Local Linux Privilege Escalation checklist** from **[book.hacktricks.xyz](https://book.hacktricks.xyz/linux-hardening/linux-privilege-escalation-checklist)**
+- Check the **Local Linux Privilege Escalation checklist** from **[book.hacktricks.wiki](https://book.hacktricks.wiki/en/linux-hardening/linux-privilege-escalation-checklist.html)**
 - **[LinPEAS](https://github.com/peass-ng/PEASS-ng/tree/master/linPEAS) - Linux local Privilege Escalation Awesome Script (.sh)**
 
 ## Quick Start
@@ -38,6 +38,3 @@ If you want to **add something** and have **any cool idea** related to this proj
 
 All the scripts/binaries of the PEAS suite should be used for authorized penetration testing and/or educational purposes only. Any misuse of this software will not be the responsibility of the author or of any other collaborator. Use it at your own machines and/or with the owner's permission.
 
-
-
-By Polop<sup>(TM)</sup>

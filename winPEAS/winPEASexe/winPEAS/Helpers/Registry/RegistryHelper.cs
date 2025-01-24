@@ -24,6 +24,40 @@ namespace winPEAS.Helpers.Registry
                 return Microsoft.Win32.Registry.LocalMachine.OpenSubKey(path);
         }
 
+        public static bool WriteRegValue(string hive, string path, string keyName, string value)
+        {
+            try
+            {
+                RegistryKey regKey;
+                if (hive == "HKCU")
+                {
+                    regKey = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(path);
+                }
+                else if (hive == "HKU")
+                {
+                    regKey = Microsoft.Win32.Registry.Users.OpenSubKey(path);
+
+                }
+                else
+                {
+                    regKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(path);
+                }
+
+                if (regKey == null)
+                {
+                    return false;
+                }
+
+                regKey.SetValue(keyName, value, RegistryValueKind.String);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public static string GetRegValue(string hive, string path, string value)
         {
             // returns a single registry value under the specified path in the specified hive (HKLM/HKCU)
@@ -97,6 +131,49 @@ namespace winPEAS.Helpers.Registry
                     }
                 }
                 return keyValuePairs;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public static string[] ListRegValues(string hive, string path)
+        {
+            string[] keys = null;
+            try
+            {
+                if (hive == "HKCU")
+                {
+                    using (var regKeyValues = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(path))
+                    {
+                        if (regKeyValues != null)
+                        {
+                            keys = regKeyValues.GetValueNames();
+                        }
+                    }
+                }
+                else if (hive == "HKU")
+                {
+                    using (var regKeyValues = Microsoft.Win32.Registry.Users.OpenSubKey(path))
+                    {
+                        if (regKeyValues != null)
+                        {
+                            keys = regKeyValues.GetValueNames();
+                        }
+                    }
+                }
+                else
+                {
+                    using (var regKeyValues = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(path))
+                    {
+                        if (regKeyValues != null)
+                        {
+                            keys = regKeyValues.GetValueNames();
+                        }
+                    }
+                }
+                return keys;
             }
             catch
             {
